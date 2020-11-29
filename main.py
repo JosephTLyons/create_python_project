@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
 import os
-import sys
+import shutil
 import subprocess
-
+import sys
 from pathlib import Path
-from shutil import copy
 
 
 def display_error_and_exit(error_message):
@@ -16,7 +15,7 @@ def display_error_and_exit(error_message):
 # Fix up print messages
 # Test sys.exit() and see how it works
 def create_project_directory():
-    # There should be 3 argumnets (this file name will count as one)
+    # There should be 3 arguments (this file name will count as one)
     if len(sys.argv) != 3:
         display_error_and_exit("Must pass in project directory and project name parameters.")
 
@@ -30,63 +29,66 @@ def create_project_directory():
     if not project_directory_relative.isalnum():
         display_error_and_exit("Project name has illegal characters.")
 
-    project_directory_absolute = project_parent_directory.joinpath() / project_directory_relative
+    project_directory_absolute_path = project_parent_directory.joinpath() / project_directory_relative
 
     # If os.mkdir ends up not blocking execution until the directory is made, then use:
     # subprocess.call(["mkdir", project_final_path])
     # We will know if there is ever a situation where future operations fail because this directory
     # hasn't been made yet.
-    if not project_directory_absolute.exists():
-        os.mkdir(project_directory_absolute)
+    if not project_directory_absolute_path.exists():
+        os.mkdir(project_directory_absolute_path)
 
-    return project_directory_absolute
-
-
-def add_source_folder(project_directory_absolute):
-    source_directory_absolute = project_directory_absolute / "source"
-
-    if not source_directory_absolute.exists():
-        os.mkdir(source_directory_absolute)
+    return project_directory_absolute_path
 
 
-def add_template_files(project_directory_absolute):
+def add_source_folder(project_directory_absolute_path):
+    source_directory_absolute_path = project_directory_absolute_path / "source"
+
+    if not source_directory_absolute_path.exists():
+        os.mkdir(source_directory_absolute_path)
+
+
+def add_template_files(project_directory_absolute_path):
     template_files_directory = Path("./template_files")
 
     if not template_files_directory.exists():
         raise Exception("Template directory is not valid.")
 
-    items_to_ignore = [".DS_STORE"]
-    template_text_to_replace = ".template"
+    template_text_extension = ".template"
 
-    for root, _, files in os.walk(template_files_directory):
-        for file in files:
-            if file not in items_to_ignore:
-                file_path_in_template_files_directory = Path(root, file)
+    for root, _, template_files in os.walk(template_files_directory):
+        for template_file in template_files:
+            if template_text_extension in template_file:
+                template_file_absolute_path = Path(root, template_file)
 
-                copy(file_path_in_template_files_directory, project_directory_absolute)
+                project_file_name = str(template_file).replace(template_text_extension, "")
+                project_file_absolute_path = project_directory_absolute_path / project_file_name
 
-                if template_text_to_replace in file:
-                    file_path_string_template_stripped = file.replace(template_text_to_replace, "")
-                    file_path_in_project = project_directory_absolute / file
-                    file_path_in_project.rename(file_path_string_template_stripped)
+                shutil.copy(template_file_absolute_path, project_file_absolute_path)
 
 
-def initialize_git_repository(project_directory_absolute):
-    pass
+def initialize_git_repository(project_directory_absolute_path, should_create_initial_commit=False):
+    subprocess.call([f"git init {project_directory_absolute_path}"])
+
+    if should_create_initial_commit:
+        # Will need to figure out how to provide the absolute path to the git repo of the new project here
+        subprocess.call(["git add ."])
+        subprocess.call(["git commit -m \"Initial commit\""])
 
 
 # Make sure to use blocking subprocess calls
-# Can eiher create files and load in the contents or have files in this repo that get copied over
+# Can either create files and load in the contents or have files in this repo that get copied over
 
 # Take in parameters from the command line so that paths can be autocompleted
 # Validate that we are getting a path that is a path and a string for a project and that that
 # Project name doesn't already exist in that directory
 # Check that path is valid too
 def main():
-    project_directory_absolute = create_project_directory()
+    project_directory_absolute_path = create_project_directory()
 
-    add_source_folder(project_directory_absolute)
-    add_template_files(project_directory_absolute)
+    add_template_files(project_directory_absolute_path)
+    add_source_folder(project_directory_absolute_path)
+    initialize_git_repository(project_directory_absolute_path)
 
 
 if __name__ == "__main__":
