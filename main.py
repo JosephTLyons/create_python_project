@@ -17,12 +17,12 @@ def display_error_and_exit(error_message):
 def create_project_directory():
     # There should be 3 arguments (this file name will count as one)
     if len(sys.argv) != 3:
-        display_error_and_exit("Must pass in project directory and project name parameters.")
+        display_error_and_exit("Must pass in project parent directory and project name parameters.")
 
     project_parent_directory = Path(sys.argv[1])
 
     if not project_parent_directory.exists():
-        display_error_and_exit("Path must exist.")
+        display_error_and_exit("Project parent directory does not exist.")
 
     project_directory_relative = sys.argv[2]
 
@@ -68,7 +68,8 @@ def add_template_files(project_directory_absolute_path):
 
 
 def initialize_git_repository(project_directory_absolute_path, should_create_initial_commit=False):
-    subprocess.call([f"git init {project_directory_absolute_path}"])
+    git_initialization_command = f"git init {project_directory_absolute_path}"
+    subprocess.call([git_initialization_command])
 
     if should_create_initial_commit:
         # Will need to figure out how to provide the absolute path to the git repo of the new project here
