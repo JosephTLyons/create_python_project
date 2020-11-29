@@ -12,8 +12,6 @@ def display_error_and_exit(error_message):
     sys.exit()
 
 
-# Fix up print messages
-# Test sys.exit() and see how it works
 def create_project_directory():
     # There should be 3 arguments (this file name will count as one)
     if len(sys.argv) != 3:
