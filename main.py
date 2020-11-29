@@ -29,7 +29,7 @@ def create_project_directory():
     if not project_directory_relative.isalnum():
         display_error_and_exit("Project name has illegal characters.")
 
-    project_directory_absolute_path = project_parent_directory.joinpath() / project_directory_relative
+    project_directory_absolute_path = project_parent_directory / project_directory_relative
 
     # If os.mkdir ends up not blocking execution until the directory is made, then use:
     # subprocess.call(["mkdir", project_final_path])
