@@ -70,13 +70,13 @@ def add_template_files(project_directory_absolute_path):
 
 
 def initialize_git_repository(project_directory_absolute_path, should_create_initial_commit=False):
-    git_directory_location_flag = f"--git-dir={project_directory_absolute_path}/.git"
+    git_repository_location_flag = f"--git-dir={project_directory_absolute_path}/.git"
 
-    subprocess.call(["git", git_directory_location_flag, "init"])
+    subprocess.call(["git", git_repository_location_flag, "init"])
 
     if should_create_initial_commit:
-        subprocess.call(["git", git_directory_location_flag, "add", "."])
-        subprocess.call(["git", git_directory_location_flag, "commit", "-m", "Initial commit"])
+        subprocess.call(["git", git_repository_location_flag, "add", "."])
+        subprocess.call(["git", git_repository_location_flag, "commit", "-m", "Initial commit"])
 
 
 def main():
