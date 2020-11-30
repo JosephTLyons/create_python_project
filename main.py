@@ -4,6 +4,7 @@ import os
 import shutil
 import subprocess
 import sys
+
 from pathlib import Path
 
 
@@ -22,19 +23,24 @@ def create_project_directory():
     if not project_parent_directory.exists():
         display_error_and_exit("Project parent directory does not exist.")
 
-    project_directory_relative = sys.argv[2]
+    project_directory_name = sys.argv[2]
 
-    if not project_directory_relative.isalnum():
-        display_error_and_exit("Project name has illegal characters.")
+    illegal_characters = [".", "/", "\\", "|", "<", ">", "\'", "\"", "{", "}", "[", "]"]
 
-    project_directory_absolute_path = project_parent_directory / project_directory_relative
+    for illegal_character in illegal_characters:
+        if illegal_character in project_directory_name:
+            display_error_and_exit("Project name has illegal characters.")
+
+    project_directory_absolute_path = project_parent_directory / project_directory_name
 
     # If os.mkdir ends up not blocking execution until the directory is made, then use:
     # subprocess.call(["mkdir", project_final_path])
     # We will know if there is ever a situation where future operations fail because this directory
     # hasn't been made yet.
-    if not project_directory_absolute_path.exists():
-        os.mkdir(project_directory_absolute_path)
+    if project_directory_absolute_path.exists():
+        display_error_and_exit("Project already exists")
+
+    os.mkdir(project_directory_absolute_path)
 
     return project_directory_absolute_path
 
@@ -66,22 +72,15 @@ def add_template_files(project_directory_absolute_path):
 
 
 def initialize_git_repository(project_directory_absolute_path, should_create_initial_commit=False):
-    git_initialization_command = f"git init {project_directory_absolute_path}"
-    subprocess.call([git_initialization_command])
+    subprocess.call(["git", "init", project_directory_absolute_path])
 
     if should_create_initial_commit:
         # Will need to figure out how to provide the absolute path to the git repo of the new project here
-        subprocess.call(["git add ."])
-        subprocess.call(["git commit -m \"Initial commit\""])
+        # If this is not possible, remove this entirely
+        subprocess.call(["git", "add", "."])
+        subprocess.call(["git", "commit", "-m", "Initial commit"])
 
 
-# Make sure to use blocking subprocess calls
-# Can either create files and load in the contents or have files in this repo that get copied over
-
-# Take in parameters from the command line so that paths can be autocompleted
-# Validate that we are getting a path that is a path and a string for a project and that that
-# Project name doesn't already exist in that directory
-# Check that path is valid too
 def main():
     project_directory_absolute_path = create_project_directory()
 
