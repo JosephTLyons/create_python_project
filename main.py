@@ -47,9 +47,7 @@ def create_project_directory():
 
 def add_source_folder(project_directory_absolute_path):
     source_directory_absolute_path = project_directory_absolute_path / "source"
-
-    if not source_directory_absolute_path.exists():
-        os.mkdir(source_directory_absolute_path)
+    os.mkdir(source_directory_absolute_path)
 
 
 def add_template_files(project_directory_absolute_path):
