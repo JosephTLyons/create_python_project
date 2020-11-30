@@ -70,13 +70,13 @@ def add_template_files(project_directory_absolute_path):
 
 
 def initialize_git_repository(project_directory_absolute_path, should_create_initial_commit=False):
-    subprocess.call(["git", "init", project_directory_absolute_path])
+    git_directory_location_flag = f"--git-dir={project_directory_absolute_path}/.git"
+
+    subprocess.call(["git", git_directory_location_flag, "init"])
 
     if should_create_initial_commit:
-        # Will need to figure out how to provide the absolute path to the git repo of the new project here
-        # If this is not possible, remove this entirely
-        subprocess.call(["git", "add", "."])
-        subprocess.call(["git", "commit", "-m", "Initial commit"])
+        subprocess.call(["git", git_directory_location_flag, "add", "."])
+        subprocess.call(["git", git_directory_location_flag, "commit", "-m", "Initial commit"])
 
 
 def main():
