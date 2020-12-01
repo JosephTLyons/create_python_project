@@ -70,13 +70,11 @@ def add_template_files(project_directory_absolute_path):
 
 
 def initialize_git_repository(project_directory_absolute_path, should_create_initial_commit=False):
-    git_repository_location_flag = f"--git-dir={project_directory_absolute_path}/.git"
-
-    subprocess.call(["git", git_repository_location_flag, "init"])
+    subprocess.call(["git", "-C", project_directory_absolute_path, "init"])
 
     if should_create_initial_commit:
-        subprocess.call(["git", git_repository_location_flag, "add", "."])
-        subprocess.call(["git", git_repository_location_flag, "commit", "-m", "Initial commit"])
+        subprocess.call(["git", "-C", project_directory_absolute_path, "add", project_directory_absolute_path])
+        subprocess.call(["git", "-C", project_directory_absolute_path, "commit", "-m", "Initial commit"])
 
 
 def main():
@@ -89,3 +87,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# Add license.txt (or LICENSE whichever is the more standard version) to the template files
+# Should this whole project be generalized to allow for the creation of any type of project, and not just Python ones?
