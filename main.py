@@ -89,5 +89,4 @@ if __name__ == "__main__":
     main()
 
 
-# Add license.txt (or LICENSE whichever is the more standard version) to the template files
 # Should this whole project be generalized to allow for the creation of any type of project, and not just Python ones?
