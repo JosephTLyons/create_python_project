@@ -66,7 +66,7 @@ def add_template_files(project_directory_absolute_path):
                 project_file_name = str(template_file).replace(template_text_extension, "")
                 project_file_absolute_path = project_directory_absolute_path / project_file_name
 
-                shutil.copy(template_file_absolute_path, project_file_absolute_path)
+                shutil.copy2(template_file_absolute_path, project_file_absolute_path)
 
 
 def initialize_git_repository(project_directory_absolute_path, should_create_initial_commit=False):
