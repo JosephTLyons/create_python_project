@@ -55,7 +55,7 @@ def add_template_files(project_directory_absolute_path):
 
     for template_file in template_files_directory.iterdir():
         if template_text_extension in template_file.name:
-            project_file_name = str(template_file.name).replace(template_text_extension, "")
+            project_file_name = template_file.name.replace(template_text_extension, "")
             project_file_absolute_path = project_directory_absolute_path / project_file_name
 
             shutil.copy2(template_file.absolute(), project_file_absolute_path)
