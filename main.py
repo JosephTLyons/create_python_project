@@ -45,11 +45,6 @@ def create_project_directory():
     return project_directory_absolute_path
 
 
-def add_source_folder(project_directory_absolute_path):
-    source_directory_absolute_path = project_directory_absolute_path / "source"
-    os.mkdir(source_directory_absolute_path)
-
-
 def add_template_files(project_directory_absolute_path):
     template_files_directory = Path("./template_files")
 
@@ -67,6 +62,11 @@ def add_template_files(project_directory_absolute_path):
                 project_file_absolute_path = project_directory_absolute_path / project_file_name
 
                 shutil.copy2(template_file_absolute_path, project_file_absolute_path)
+
+
+def add_source_folder(project_directory_absolute_path):
+    source_directory_absolute_path = project_directory_absolute_path / "source"
+    os.mkdir(source_directory_absolute_path)
 
 
 def initialize_git_repository(project_directory_absolute_path, should_create_initial_commit=False):
