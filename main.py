@@ -53,15 +53,12 @@ def add_template_files(project_directory_absolute_path):
 
     template_text_extension = ".template"
 
-    for root, _, template_files in os.walk(template_files_directory):
-        for template_file in template_files:
-            if template_text_extension in template_file:
-                template_file_absolute_path = Path(root, template_file)
+    for template_file in template_files_directory.iterdir():
+        if template_text_extension in template_file.name:
+            project_file_name = str(template_file.name).replace(template_text_extension, "")
+            project_file_absolute_path = project_directory_absolute_path / project_file_name
 
-                project_file_name = str(template_file).replace(template_text_extension, "")
-                project_file_absolute_path = project_directory_absolute_path / project_file_name
-
-                shutil.copy2(template_file_absolute_path, project_file_absolute_path)
+            shutil.copy2(template_file.absolute(), project_file_absolute_path)
 
 
 def add_source_folder(project_directory_absolute_path):
