@@ -25,7 +25,7 @@ def create_project_directory():
 
     project_directory_name = sys.argv[2]
 
-    illegal_characters = [".", "/", "\\", "|", "<", ">", "\'", "\"", "{", "}", "[", "]"]
+    illegal_characters = [".", "/", "\\", "|", "<", ">", "'", '"', "{", "}", "[", "]"]
 
     for illegal_character in illegal_characters:
         if illegal_character in project_directory_name:
@@ -70,8 +70,12 @@ def initialize_git_repository(project_directory_absolute_path, should_create_ini
     subprocess.call(["git", "-C", project_directory_absolute_path, "init"])
 
     if should_create_initial_commit:
-        subprocess.call(["git", "-C", project_directory_absolute_path, "add", project_directory_absolute_path])
-        subprocess.call(["git", "-C", project_directory_absolute_path, "commit", "-m", "Initial commit"])
+        subprocess.call(
+            ["git", "-C", project_directory_absolute_path, "add", project_directory_absolute_path]
+        )
+        subprocess.call(
+            ["git", "-C", project_directory_absolute_path, "commit", "-m", "Initial commit"]
+        )
 
 
 def main():
